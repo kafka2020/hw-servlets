@@ -1,6 +1,7 @@
 package ru.netology.servlet;
 
 import ru.netology.controller.PostController;
+import ru.netology.exception.NotFoundException;
 import ru.netology.repository.PostRepository;
 import ru.netology.service.PostService;
 
@@ -48,7 +49,11 @@ public class MainServlet extends HttpServlet {
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
     } catch (Exception e) {
       e.printStackTrace();
-      resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      if (e instanceof NotFoundException || e.getCause() instanceof NotFoundException) {
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND); // 404
+      } else {
+        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 500
+      }
     }
   }
 }
